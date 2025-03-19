@@ -19,7 +19,7 @@ class Roles(interactions.Extension):
         opt_type=interactions.OptionType.ROLE  
     )
     async def at_role(self, ctx: interactions.SlashContext, role: interactions.Role):
-        await ctx.send(f"@{role.name}")# @那個身分組
+        await ctx.send(f"@ {role.name}")# @那個身分組
     #列出某人身上的身分組
     @module_base.subcommand("list", sub_cmd_description="List all roles of the user or another user")
     @interactions.slash_option(# 可選項 某個人
