@@ -1,90 +1,45 @@
-'''
-Discord-Bot-Module template. For detailed usages,
- check https://interactions-py.github.io/interactions.py/
-
-Copyright (C) 2024  __retr0.init__
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-'''
 import interactions
-# Use the following method to import the internal module in the current same directory
 from . import internal_t
-# Import the os module to get the parent path to the local files
 import os
-# aiofiles module is recommended for file operation
 import aiofiles
-# You can listen to the interactions.py event
 from interactions.api.events import MessageCreate
-# You can create a background task
 from interactions import Task, IntervalTrigger
 
-'''
-Replace the ModuleName with any name you'd like
-'''
-class ModuleName(interactions.Extension):
+class Roles(interactions.Extension):
     module_base: interactions.SlashCommand = interactions.SlashCommand(
-        name="replace_your_command_base_here",
-        description="Replace here for the base command descriptions"
+        name="roles",
+        description="command about roles"
     )
-    module_group: interactions.SlashCommand = module_base.group(
-        name="replace_your_command_group_here",
-        description="Replace here for the group command descriptions"
+    #機器人代@
+    @module_base.subcommand("at", sub_cmd_description="Send a mention to the selected role")
+    @interactions.slash_option(#選擇身分組
+        name="role",
+        description="Choose a role to @",
+        required=True,
+        opt_type=interactions.OptionType.ROLE  
     )
-
-    @module_group.subcommand("ping", sub_cmd_description="Replace the description of this command")
-    @interactions.slash_option(
-        name = "option_name",
-        description = "Option description",
-        required = True,
-        opt_type = interactions.OptionType.STRING
+    async def at_role(self, ctx: interactions.SlashContext, role: interactions.Role):
+        await ctx.send(f"@{role.name}")# @那個身分組
+    #列出某人身上的身分組
+    @module_base.subcommand("list", sub_cmd_description="List all roles of the user or another user")
+    @interactions.slash_option(# 可選項 某個人
+        name="user",
+        description="Select a user to list roles (optional)",
+        required=False,  
+        opt_type=interactions.OptionType.USER  
     )
-    async def module_group_ping(self, ctx: interactions.SlashContext, option_name: str):
-        await ctx.send(f"Pong {option_name}!")
-        internal_t.internal_t_testfunc()
-
-    @module_base.subcommand("pong", sub_cmd_description="Replace the description of this command")
-    @interactions.slash_option(
-        name = "option_name",
-        description = "Option description",
-        required = True,
-        opt_type = interactions.OptionType.STRING
-    )
-    async def module_group_pong(self, ctx: interactions.SlashContext, option_name: str):
-        # The local file path is inside the directory of the module's main script file
-        async with aiofiles.open(f"{os.path.dirname(__file__)}/example_file.txt") as afp:
-            file_content: str = await afp.read()
-        await ctx.send(f"Pong {option_name}!\nFile content: {file_content}")
-        internal_t.internal_t_testfunc()
-
-    @interactions.listen(MessageCreate)
-    async def on_messagecreate(self, event: MessageCreate):
-        '''
-        Event listener when a new message is created
-        '''
-        print(f"User {event.message.author.display_name} sent '{event.message.content}'")
-
-    # You can even create a background task to run as you wish.
-    # Refer to https://interactions-py.github.io/interactions.py/Guides/40%20Tasks/ for guides
-    # Refer to https://interactions-py.github.io/interactions.py/API%20Reference/API%20Reference/models/Internal/tasks/ for detailed APIs
-    @Task.create(IntervalTrigger(minutes=1))
-    async def task_everyminute(self):
-        channel: interactions.TYPE_MESSAGEABLE_CHANNEL = self.bot.get_guild(1234567890).get_channel(1234567890)
-        await channel.send("Background task send every one minute")
-        print("Background Task send every one minute")
-
-    # The command to start the task
-    @module_base.subcommand("start_task", sub_cmd_description="Start the background task")
-    async def module_base_starttask(self, ctx: interactions.SlashContext):
-        self.task_everyminute.start()
-        await ctx.send("Task started")
+    async def list_roles(self, ctx: interactions.SlashContext, user: interactions.User = None):
+        if user is None:# 如果沒有選成員，列出自己的身分組
+            roles = ctx.author.roles
+        else:
+            member = ctx.guild.get_member(user.id)  #獲取該成員在伺服器中的資料
+            if member is None:
+                await ctx.send("User not found in this server.")
+                return
+            roles = member.roles
+        # 過濾掉 @everyone 
+        role_names = [role.name for role in roles if role.name != "@everyone"]
+        if role_names:
+            await ctx.send(f"Roles: {', '.join(role_names)}")
+        else:
+            await ctx.send("This user does not have any roles apart from @everyone.")
