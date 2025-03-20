@@ -64,10 +64,11 @@ class Roles(interactions.Extension):
         guild = ctx.guild
         member_count = 0
         removed_count = 0
+        role_objects = {role.id: role for role in guild.roles}#建立伺服器內role跟roleID的字典
 
         for member in guild.members:
             require_role = PARTY_REQUIRE_ROLE_ID in [role.id for role in member.roles]
-            party_roles = [role.id for role in member.roles if role.id in PARTY_ROLE_IDS.values()]
+            party_roles = [role_objects[role_id] for role_id in [role.id for role in member.roles] if role_id in PARTY_ROLE_IDS.values()]
             member_count += 1
             if not require_role and party_roles:
                 if isinstance(party_roles, list) and len(party_roles) > 0:
