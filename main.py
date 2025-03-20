@@ -62,9 +62,10 @@ class Roles(interactions.Extension):
     @roles_base.subcommand("partycheck", sub_cmd_description="check all member's party roles")
     async def partycheck(self, ctx: interactions.SlashContext):
         guild = ctx.guild
+        members = await guild.get_all_members()
         removed_count = 0
 
-        async for member in guild.fetch_all_members():
+        async for member in members:
             require_role = PARTY_REQUIRE_ROLE_ID in [role.id for role in member.roles]
             party_roles = [role.id for role in member.roles if role.id in PARTY_ROLE_IDS.values()]
 
