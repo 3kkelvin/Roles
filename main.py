@@ -72,7 +72,7 @@ class Roles(interactions.Extension):
             member_count += 1
             if not require_role and party_roles:
                 for role in party_roles:
-                    await member.remove_roles(role)
+                    await member.remove_roles([role])
                 # await ctx.send(f"party_roles: {party_roles}")
                 removed_count += 1
 
