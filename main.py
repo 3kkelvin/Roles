@@ -62,18 +62,18 @@ class Roles(interactions.Extension):
     @roles_base.subcommand("partycheck", sub_cmd_description="check all member's party roles")
     async def partycheck(self, ctx: interactions.SlashContext):
         guild = ctx.guild
-        members = await guild.fetch_members()
+        member_count = 0
         removed_count = 0
 
-        async for member in members:
+        async for member in guild.members:
             require_role = PARTY_REQUIRE_ROLE_ID in [role.id for role in member.roles]
             party_roles = [role.id for role in member.roles if role.id in PARTY_ROLE_IDS.values()]
-
+            member_count += 1
             if not require_role and party_roles:
                 await member.remove_roles(*party_roles)
                 removed_count += 1
 
-        await ctx.send(f"已檢查所有用戶，共移除 {removed_count} 位成員的黨派身分組。")
+        await ctx.send(f"已檢查{member_count}位用戶，共移除 {removed_count} 位成員的黨派身分組。")
 
     #機器人代@
     @at_group.subcommand("roles", sub_cmd_description="Send a mention to the selected role")
