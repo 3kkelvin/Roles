@@ -1,13 +1,13 @@
 import interactions
 import os
 import aiofiles
-PARTY_REQUIRE_ROLE_ID = 1334906899610472495 #選民
+PARTY_REQUIRE_ROLE_ID = 1200043628899356702 #選民
 PARTY_ROLE_IDS = {
-    "海外": 1334906899597885446,
-    "台灣": 1334906899597885443,  
-    "美加": 1334906899597885442   
+    "大舞台反对派联盟": 1344339893106774129,
+    "大舞台活动党": 1344347203400896533,  
+    "自由社會大舞台改革聯盟": 1344477869342195722   
 }
-ATABLE_ROLES = ["国务大臣（管理员）"]
+#ATABLE_ROLES = ["国务大臣（管理员）"]
 
 class Roles(interactions.Extension):
     roles_base: interactions.SlashCommand = interactions.SlashCommand(
@@ -44,7 +44,7 @@ class Roles(interactions.Extension):
     async def autocomplete_party(self, ctx: interactions.AutocompleteContext):
         await ctx.send(choices=[{"name": i, "value": i} for i in PARTY_ROLE_IDS.keys()])
 
-    @at_group.subcommand("manager", sub_cmd_description="To @manager")
+    '''@at_group.subcommand("manager", sub_cmd_description="To @manager")
     @interactions.slash_option(#選擇身分組
         name="manager",
         description="Choose a manager to @",
@@ -56,9 +56,9 @@ class Roles(interactions.Extension):
         await ctx.send(f"{role.mention}")# @黨派身分組
     @at_manager.autocomplete("manager")#自動補全，限制選項
     async def autocomplete_manager(self, ctx: interactions.AutocompleteContext):
-        await ctx.send(choices=[{"name": i, "value": i} for i in ATABLE_ROLES])
+        await ctx.send(choices=[{"name": i, "value": i} for i in ATABLE_ROLES])'''
 
-    # 手動檢查所有用戶的身分組 (管理員可執行)
+    #手動檢查所有用戶的身分組 (管理員可執行)
     @roles_base.subcommand("partycheck", sub_cmd_description="check all member's party roles")
     async def partycheck(self, ctx: interactions.SlashContext):
         guild = ctx.guild
@@ -77,7 +77,7 @@ class Roles(interactions.Extension):
                 removed_count += 1
 
         await ctx.send(f"已檢查{member_count}位用戶，共移除 {removed_count} 位成員的黨派身分組。")
-
+'''
     #機器人代@
     @at_group.subcommand("roles", sub_cmd_description="Send a mention to the selected role")
     @interactions.slash_option(#選擇身分組
@@ -111,3 +111,4 @@ class Roles(interactions.Extension):
             await ctx.send(f"Roles: {', '.join(role_names)}")
         else:
             await ctx.send("This user does not have any roles apart from @everyone.")
+'''
