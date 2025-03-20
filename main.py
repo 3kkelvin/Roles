@@ -71,10 +71,11 @@ class Roles(interactions.Extension):
             party_roles = [role_objects[role_id] for role_id in [role.id for role in member.roles] if role_id in PARTY_ROLE_IDS.values()]
             member_count += 1
             if not require_role and party_roles:
-                if isinstance(party_roles, list) and len(party_roles) > 0:
-                    await member.remove_roles(*party_roles)
-                else:
-                    await member.remove_roles(party_roles[0])
+                #if isinstance(party_roles, list) and len(party_roles) > 0:
+                #    await member.remove_roles(*party_roles)
+                #else:
+                #    await member.remove_roles(party_roles[0])
+                ctx.send(f"party_roles: {party_roles}")
                 removed_count += 1
 
         await ctx.send(f"已檢查{member_count}位用戶，共移除 {removed_count} 位成員的黨派身分組。")
