@@ -19,7 +19,8 @@ class Roles(interactions.Extension):
         name="party",
         description="Choose a party to @",
         required=True,
-        opt_type=interactions.OptionType.ROLE  
+        opt_type=interactions.OptionType.ROLE,  
+        autocomplete=True
     )
     async def at_party(self, ctx: interactions.SlashContext, role: interactions.Role):
         await ctx.send(f"{role.mention}")# @黨派身分組
@@ -32,7 +33,8 @@ class Roles(interactions.Extension):
         name="manager",
         description="Choose a manager to @",
         required=True,
-        opt_type=interactions.OptionType.ROLE  
+        opt_type=interactions.OptionType.ROLE, 
+        autocomplete=True 
     )
     async def at_manager(self, ctx: interactions.SlashContext, role: interactions.Role):
         await ctx.send(f"{role.mention}")# @黨派身分組
