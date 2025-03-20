@@ -1,49 +1,47 @@
 import interactions
 import os
 import aiofiles
-from interactions.api.events import MessageCreate
-from interactions import Task, IntervalTrigger, AutocompleteContext
 ALLOWED_PARTY = ["海外", "台灣", "美加"]
 ATABLE_ROLES = ["国务大臣（管理员）"]
 
 class Roles(interactions.Extension):
-    module_base: interactions.SlashCommand = interactions.SlashCommand(
+    roles_base: interactions.SlashCommand = interactions.SlashCommand(
         name="roles",
         description="command about roles"
     )
-    module_group: interactions.SlashCommand = module_base.group(
+    at_group: interactions.SlashCommand = roles_base.group(
         name="at",
         description="command about @"
     )
 
-    module_group.subcommand("party", sub_cmd_description="To @party")
+    at_group.subcommand("party", sub_cmd_description="To @party")
     @interactions.slash_option(#選擇身分組
         name="party",
         description="Choose a party to @",
         required=True,
         opt_type=interactions.OptionType.ROLE  
     )
-    async def at_role(self, ctx: interactions.SlashContext, role: interactions.Role):
+    async def at_party(self, ctx: interactions.SlashContext, role: interactions.Role):
         await ctx.send(f"{role.mention}")# @黨派身分組
     @interactions.autocomplete("party")#自動補全，限制選項
-    async def autocomplete_party(self, ctx: AutocompleteContext):
+    async def autocomplete_party(self, ctx: interactions.AutocompleteContext):
         await ctx.send(choices=[{"name": i, "value": i} for i in ALLOWED_PARTY])
 
-    module_group.subcommand("manager", sub_cmd_description="To @manager")
+    at_group.subcommand("manager", sub_cmd_description="To @manager")
     @interactions.slash_option(#選擇身分組
         name="manager",
         description="Choose a manager to @",
         required=True,
         opt_type=interactions.OptionType.ROLE  
     )
-    async def at_role(self, ctx: interactions.SlashContext, role: interactions.Role):
+    async def at_manager(self, ctx: interactions.SlashContext, role: interactions.Role):
         await ctx.send(f"{role.mention}")# @黨派身分組
     @interactions.autocomplete("manager")#自動補全，限制選項
-    async def autocomplete_manager(self, ctx: AutocompleteContext):
+    async def autocomplete_manager(self, ctx: interactions.AutocompleteContext):
         await ctx.send(choices=[{"name": i, "value": i} for i in ATABLE_ROLES])
 
     #機器人代@
-    @module_group.subcommand("roles", sub_cmd_description="Send a mention to the selected role")
+    @at_group.subcommand("roles", sub_cmd_description="Send a mention to the selected role")
     @interactions.slash_option(#選擇身分組
         name="role",
         description="Choose a role to @",
@@ -53,7 +51,7 @@ class Roles(interactions.Extension):
     async def at_role(self, ctx: interactions.SlashContext, role: interactions.Role):
         await ctx.send(f"{role.mention}")# @那個身分組
     #列出某人身上的身分組
-    @module_base.subcommand("list", sub_cmd_description="List all roles of the user or another user")
+    @roles_base.subcommand("list", sub_cmd_description="List all roles of the user or another user")
     @interactions.slash_option(# 可選項 某個人
         name="user",
         description="Select a user to list roles (optional)",
