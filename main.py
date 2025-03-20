@@ -44,7 +44,7 @@ class Roles(interactions.Extension):
         await ctx.send(choices=[{"name": i, "value": i} for i in ATABLE_ROLES])
 
     #機器人代@
-    @module_base.subcommand("at", sub_cmd_description="Send a mention to the selected role")
+    @module_group.subcommand("roles", sub_cmd_description="Send a mention to the selected role")
     @interactions.slash_option(#選擇身分組
         name="role",
         description="Choose a role to @",
