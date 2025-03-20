@@ -14,7 +14,7 @@ class Roles(interactions.Extension):
         description="command about @"
     )
 
-    at_group.subcommand("party", sub_cmd_description="To @party")
+    @at_group.subcommand("party", sub_cmd_description="To @party")
     @interactions.slash_option(#選擇身分組
         name="party",
         description="Choose a party to @",
@@ -28,7 +28,7 @@ class Roles(interactions.Extension):
     async def autocomplete_party(self, ctx: interactions.AutocompleteContext):
         await ctx.send(choices=[{"name": i, "value": i} for i in ALLOWED_PARTY])
 
-    at_group.subcommand("manager", sub_cmd_description="To @manager")
+    @at_group.subcommand("manager", sub_cmd_description="To @manager")
     @interactions.slash_option(#選擇身分組
         name="manager",
         description="Choose a manager to @",
