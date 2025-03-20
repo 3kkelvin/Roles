@@ -24,7 +24,7 @@ class Roles(interactions.Extension):
     )
     async def at_party(self, ctx: interactions.SlashContext, role: interactions.Role):
         await ctx.send(f"{role.mention}")# @黨派身分組
-    @interactions.autocomplete("party")#自動補全，限制選項
+    @at_party.autocomplete("party")#自動補全，限制選項
     async def autocomplete_party(self, ctx: interactions.AutocompleteContext):
         await ctx.send(choices=[{"name": i, "value": i} for i in ALLOWED_PARTY])
 
@@ -38,7 +38,7 @@ class Roles(interactions.Extension):
     )
     async def at_manager(self, ctx: interactions.SlashContext, role: interactions.Role):
         await ctx.send(f"{role.mention}")# @黨派身分組
-    @interactions.autocomplete("manager")#自動補全，限制選項
+    @at_manager.autocomplete("manager")#自動補全，限制選項
     async def autocomplete_manager(self, ctx: interactions.AutocompleteContext):
         await ctx.send(choices=[{"name": i, "value": i} for i in ATABLE_ROLES])
 
