@@ -75,7 +75,7 @@ class Roles(interactions.Extension):
                 #    await member.remove_roles(*party_roles)
                 #else:
                 #    await member.remove_roles(party_roles[0])
-                ctx.send(f"party_roles: {party_roles}")
+                await ctx.send(f"party_roles: {party_roles}")
                 removed_count += 1
 
         await ctx.send(f"已檢查{member_count}位用戶，共移除 {removed_count} 位成員的黨派身分組。")
