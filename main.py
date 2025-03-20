@@ -1,5 +1,4 @@
 import interactions
-from . import internal_t
 import os
 import aiofiles
 from interactions.api.events import MessageCreate
