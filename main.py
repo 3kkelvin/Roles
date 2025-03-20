@@ -1,6 +1,7 @@
 import interactions
 import os
 import aiofiles
+PARTY_REQUIRE_ROLE_ID = 1334906899610472495 #選民
 PARTY_ROLE_IDS = {
     "海外": 1334906899597885446,
     "台灣": 1334906899597885443,  
@@ -56,6 +57,22 @@ class Roles(interactions.Extension):
     @at_manager.autocomplete("manager")#自動補全，限制選項
     async def autocomplete_manager(self, ctx: interactions.AutocompleteContext):
         await ctx.send(choices=[{"name": i, "value": i} for i in ATABLE_ROLES])
+
+    # 手動檢查所有用戶的身分組 (管理員可執行)
+    @roles_base.subcommand("partycheck", sub_cmd_description="check all member's party roles")
+    async def partycheck(self, ctx: interactions.SlashContext):
+        guild = ctx.guild
+        removed_count = 0
+
+        async for member in guild.fetch_all_members():
+            require_role = PARTY_REQUIRE_ROLE_ID in [role.id for role in member.roles]
+            party_roles = [role.id for role in member.roles if role.id in PARTY_ROLE_IDS.values()]
+
+            if not require_role and party_roles:
+                await member.remove_roles(*party_roles)
+                removed_count += 1
+
+        await ctx.send(f"已檢查所有用戶，共移除 {removed_count} 位成員的黨派身分組。")
 
     #機器人代@
     @at_group.subcommand("roles", sub_cmd_description="Send a mention to the selected role")
