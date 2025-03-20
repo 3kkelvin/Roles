@@ -27,14 +27,18 @@ class Roles(interactions.Extension):
         autocomplete=True  
     )
     async def at_party(self, ctx: interactions.SlashContext, party: str):
-        role_id = PARTY_ROLE_IDS.get(party)  # 根據選擇的名稱取得 ID
-        if role_id:
-            role = ctx.guild.get_role(role_id)  # 透過 ID 取得角色物件
-            if role:
-                await ctx.send(f"{role.mention}")  # @對應的身分組
-        else:
+        role_id = PARTY_ROLE_IDS.get(party)#根據選擇的名稱取得 ID
+        if not role_id:
             await ctx.send("無效的選擇，請重新嘗試。")
-
+            return
+        role = ctx.guild.get_role(role_id)#透過 ID 取得角色物件
+        if not role:
+            await ctx.send("找不到該身分組，請找技術公務員。")
+            return
+        if role_id not in [r.id for r in ctx.author.roles]:#檢查是否符合身分
+            await ctx.send("你不在該黨派中，無法 @ 該身分組。")
+            return
+        await ctx.send(f"{role.mention}") 
     @at_party.autocomplete("party")  
     async def autocomplete_party(self, ctx: interactions.AutocompleteContext):
         await ctx.send(choices=[{"name": i, "value": i} for i in PARTY_ROLE_IDS.keys()])
