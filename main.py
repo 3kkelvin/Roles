@@ -65,7 +65,7 @@ class Roles(interactions.Extension):
         member_count = 0
         removed_count = 0
 
-        async for member in guild.members:
+        for member in guild.members:
             require_role = PARTY_REQUIRE_ROLE_ID in [role.id for role in member.roles]
             party_roles = [role.id for role in member.roles if role.id in PARTY_ROLE_IDS.values()]
             member_count += 1
