@@ -3,7 +3,7 @@ import os
 import aiofiles
 PARTY_REQUIRE_ROLE_ID = 1200043628899356702 #選民
 PARTY_ROLE_IDS = {
-    "大舞台反对派联盟": 1344339893106774129,
+    "大舞台反对派联盟": 1334906899661062274,#1344339893106774129,
     "大舞台活动党": 1344347203400896533,  
     "自由社會大舞台改革聯盟": 1344477869342195722   
 }
@@ -39,7 +39,7 @@ class Roles(interactions.Extension):
         if role_id not in [r.id for r in ctx.author.roles]:#檢查是否符合身分
             await ctx.send("你不在該黨派中，無法 @ 該身分組。")
             return
-        await ctx.send(f"{role.mention}") 
+        await ctx.send(f"{role.mention}", allowed_mentions=interactions.AllowedMentions(roles=True)) 
     @at_party.autocomplete("party")  
     async def autocomplete_party(self, ctx: interactions.AutocompleteContext):
         await ctx.send(choices=[{"name": i, "value": i} for i in PARTY_ROLE_IDS.keys()])
